@@ -1,0 +1,25 @@
+#include <algorithm>
+#include <cmath>
+#include <iostream>
+#include <queue>
+#include <regex>
+#include <sstream>
+#include <string>
+#include <vector>
+using namespace std;
+struct Proc { string id; int arrival, burst, priority; };
+struct Seg { string id; int start, end; };
+struct Stat { string id; int completion=0, first=-1; };
+struct Result { vector<Seg> timeline; vector<Stat> stats; double awt=0, atat=0, art=0, throughput=0, util=0; int switches=0; };
+static string esc(const string& s){ string o; for(char c:s){if(c=='"'||c=='\\')o+='\\'; if(c=='\n'){o+="\\n";continue;} o+=c;} return o; }
+static void add(vector<Seg>& t,string id,int a,int b){ if(a==b)return; if(!t.empty()&&t.back().id==id&&t.back().end==a)t.back().end=b;else t.push_back({id,a,b}); }
+static Result run(const vector<Proc>& p,const string& alg,int q){ Result r; for(auto&x:p)r.stats.push_back({x.id}); int n=(int)p.size(), done=0,now=0; vector<int> rem(n); for(int i=0;i<n;i++)rem[i]=p[i].burst;
+ auto idx=[&](const string&id){for(int i=0;i<n;i++)if(p[i].id==id)return i;return -1;};
+ auto execute=[&](int i,int len){ if(now<p[i].arrival){add(r.timeline,"IDLE",now,p[i].arrival);now=p[i].arrival;} if(r.stats[i].first<0)r.stats[i].first=now; add(r.timeline,p[i].id,now,now+len);now+=len;rem[i]-=len;if(!rem[i]){r.stats[i].completion=now;done++;}};
+ if(alg=="FCFS"||alg=="SJF"||alg=="PRIORITY") { vector<int> pending(n); for(int i=0;i<n;i++)pending[i]=i; while(done<n){ vector<int> ready;for(int i:pending)if(rem[i]&&p[i].arrival<=now)ready.push_back(i);if(ready.empty()){int next=1e9;for(int i:pending)if(rem[i])next=min(next,p[i].arrival);add(r.timeline,"IDLE",now,next);now=next;continue;} auto cmp=[&](int a,int b){if(alg=="FCFS")return tie(p[a].arrival,p[a].id)<tie(p[b].arrival,p[b].id);if(alg=="SJF")return tie(p[a].burst,p[a].arrival,p[a].id)<tie(p[b].burst,p[b].arrival,p[b].id);return tie(p[a].priority,p[a].arrival,p[a].id)<tie(p[b].priority,p[b].arrival,p[b].id);};int i=*min_element(ready.begin(),ready.end(),cmp);execute(i,rem[i]);}}
+ else { queue<int> ready; vector<int> order(n);for(int i=0;i<n;i++)order[i]=i;stable_sort(order.begin(),order.end(),[&](int a,int b){return tie(p[a].arrival,p[a].id)<tie(p[b].arrival,p[b].id);});int k=0;while(done<n){if(ready.empty()&&k<n&&now<p[order[k]].arrival){add(r.timeline,"IDLE",now,p[order[k]].arrival);now=p[order[k]].arrival;}while(k<n&&p[order[k]].arrival<=now)ready.push(order[k++]);if(ready.empty())continue;int i=ready.front();ready.pop();int len=min(q,rem[i]);if(r.stats[i].first<0)r.stats[i].first=now;add(r.timeline,p[i].id,now,now+len);now+=len;rem[i]-=len;while(k<n&&p[order[k]].arrival<=now)ready.push(order[k++]);if(rem[i])ready.push(i);else{r.stats[i].completion=now;done++;}} }
+ int end=now,busy=0,prev=-1; for(auto&s:r.timeline){if(s.id=="IDLE"){prev=-1;continue;}busy+=s.end-s.start;int cur=idx(s.id);if(cur>=0){if(prev>=0&&prev!=cur)r.switches++;prev=cur;}}
+ for(int i=0;i<n;i++){int tat=r.stats[i].completion-p[i].arrival;r.atat+=tat;r.awt+=tat-p[i].burst;r.art+=r.stats[i].first-p[i].arrival;} r.awt/=n;r.atat/=n;r.art/=n;r.throughput=end?double(n)/end:0;r.util=end?100.0*busy/end:0;return r; }
+int main(){ string in((istreambuf_iterator<char>(cin)),{}); vector<Proc> p; regex obj(R"(\{[^{}]*\})"), rid(R"("id"\s*:\s*("([^"\\]*(?:\\.[^"\\]*)*)"|[0-9]+))"), ra(R"("arrival"\s*:\s*(-?[0-9]+))"), rb(R"("burst"\s*:\s*(-?[0-9]+))"), rp(R"("priority"\s*:\s*(-?[0-9]+))"); smatch m; for(auto it=sregex_iterator(in.begin(),in.end(),obj);it!=sregex_iterator();++it){string s=it->str();smatch a,b,c,d;if(regex_search(s,a,rid)&&regex_search(s,b,ra)&&regex_search(s,c,rb)){string id=a[2].matched?a[2].str():a[1].str().substr(1,a[1].str().size()-2);int pr=0;if(regex_search(s,d,rp))pr=stoi(d[1]);p.push_back({id,stoi(b[1]),stoi(c[1]),pr});}}
+ smatch qm;regex rq(R"("quantum"\s*:\s*(-?[0-9]+))");int q=0;if(regex_search(in,qm,rq))q=stoi(qm[1]); if(p.empty()||p.size()>1000||q<1){cerr<<"invalid workload or quantum";return 2;}for(auto&x:p)if(x.arrival<0||x.burst<1){cerr<<"invalid process";return 2;}for(int i=0;i<(int)p.size();i++)for(int j=0;j<i;j++)if(p[i].id==p[j].id){cerr<<"duplicate process id";return 2;}
+ vector<string> names={"FCFS","SJF","RR","PRIORITY"};cout<<"{\"results\":{";for(int a=0;a<4;a++){if(a)cout<<",";Result r=run(p,names[a],q);cout<<"\""<<names[a]<<"\":{\"timeline\":[";for(int i=0;i<(int)r.timeline.size();i++){auto&s=r.timeline[i];if(i)cout<<",";cout<<"{\"process_id\":\""<<esc(s.id)<<"\",\"start\":"<<s.start<<",\"end\":"<<s.end<<"}";}cout<<"],\"process_metrics\":[";for(int i=0;i<(int)p.size();i++){auto&s=r.stats[i];int tat=s.completion-p[i].arrival;int wt=tat-p[i].burst;if(i)cout<<",";cout<<"{\"process_id\":\""<<esc(p[i].id)<<"\",\"completion_time\":"<<s.completion<<",\"turnaround_time\":"<<tat<<",\"waiting_time\":"<<wt<<",\"response_time\":"<<s.first-p[i].arrival<<"}";}cout<<"],\"aggregate\":{\"average_waiting_time\":"<<r.awt<<",\"average_turnaround_time\":"<<r.atat<<",\"average_response_time\":"<<r.art<<",\"throughput\":"<<r.throughput<<",\"context_switches\":"<<r.switches<<",\"cpu_utilization\":"<<r.util<<"}}";}cout<<"}}"; }

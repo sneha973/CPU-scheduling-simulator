@@ -1,0 +1,633 @@
+{
+  "features": [
+    "process_count",
+    "burst_mean",
+    "burst_std",
+    "burst_cv",
+    "arrival_density",
+    "priority_mean",
+    "priority_spread",
+    "quantum_burst_ratio"
+  ],
+  "tree": {
+    "feature": 7,
+    "threshold": 0.3766891891891892,
+    "left": {
+      "feature": 3,
+      "threshold": 0.5614557296646484,
+      "left": {
+        "feature": 7,
+        "threshold": 0.2147562582345191,
+        "left": {
+          "feature": 5,
+          "threshold": 4.25,
+          "left": {
+            "feature": 1,
+            "threshold": 8.5,
+            "left": {
+              "feature": 4,
+              "threshold": 0.13726635514018692,
+              "left": {
+                "class": "FCFS"
+              },
+              "right": {
+                "feature": 2,
+                "threshold": 2.881409439784346,
+                "left": {
+                  "class": "RR"
+                },
+                "right": {
+                  "class": "SJF"
+                },
+                "class": "RR"
+              },
+              "class": "RR"
+            },
+            "right": {
+              "class": "RR"
+            },
+            "class": "RR"
+          },
+          "right": {
+            "class": "FCFS"
+          },
+          "class": "RR"
+        },
+        "right": {
+          "feature": 3,
+          "threshold": 0.3780866370866701,
+          "left": {
+            "feature": 5,
+            "threshold": 4.833333333333334,
+            "left": {
+              "feature": 7,
+              "threshold": 0.2263184843830005,
+              "left": {
+                "class": "RR"
+              },
+              "right": {
+                "feature": 2,
+                "threshold": 7.079636716320983,
+                "left": {
+                  "class": "RR"
+                },
+                "right": {
+                  "class": "RR"
+                },
+                "class": "RR"
+              },
+              "class": "RR"
+            },
+            "right": {
+              "class": "FCFS"
+            },
+            "class": "RR"
+          },
+          "right": {
+            "feature": 7,
+            "threshold": 0.3149801587301587,
+            "left": {
+              "feature": 4,
+              "threshold": 0.7077352472089314,
+              "left": {
+                "feature": 5,
+                "threshold": 1.3541666666666665,
+                "left": {
+                  "class": "SJF"
+                },
+                "right": {
+                  "class": "RR"
+                },
+                "class": "RR"
+              },
+              "right": {
+                "class": "RR"
+              },
+              "class": "RR"
+            },
+            "right": {
+              "feature": 1,
+              "threshold": 6.933333333333334,
+              "left": {
+                "class": "SJF"
+              },
+              "right": {
+                "class": "SJF"
+              },
+              "class": "SJF"
+            },
+            "class": "RR"
+          },
+          "class": "RR"
+        },
+        "class": "RR"
+      },
+      "right": {
+        "feature": 4,
+        "threshold": 0.42356979405034323,
+        "left": {
+          "feature": 7,
+          "threshold": 0.14557334589121734,
+          "left": {
+            "feature": 0,
+            "threshold": 2.5,
+            "left": {
+              "class": "FCFS"
+            },
+            "right": {
+              "feature": 4,
+              "threshold": 0.251984126984127,
+              "left": {
+                "feature": 5,
+                "threshold": 3.45,
+                "left": {
+                  "class": "RR"
+                },
+                "right": {
+                  "class": "RR"
+                },
+                "class": "RR"
+              },
+              "right": {
+                "feature": 0,
+                "threshold": 4.5,
+                "left": {
+                  "class": "SJF"
+                },
+                "right": {
+                  "class": "RR"
+                },
+                "class": "RR"
+              },
+              "class": "RR"
+            },
+            "class": "RR"
+          },
+          "right": {
+            "feature": 0,
+            "threshold": 2.5,
+            "left": {
+              "feature": 3,
+              "threshold": 0.917741935483871,
+              "left": {
+                "class": "FCFS"
+              },
+              "right": {
+                "class": "RR"
+              },
+              "class": "FCFS"
+            },
+            "right": {
+              "feature": 3,
+              "threshold": 0.5945545172692795,
+              "left": {
+                "class": "SJF"
+              },
+              "right": {
+                "feature": 1,
+                "threshold": 5.5,
+                "left": {
+                  "class": "RR"
+                },
+                "right": {
+                  "class": "RR"
+                },
+                "class": "RR"
+              },
+              "class": "RR"
+            },
+            "class": "RR"
+          },
+          "class": "RR"
+        },
+        "right": {
+          "feature": 7,
+          "threshold": 0.13987771739130433,
+          "left": {
+            "feature": 4,
+            "threshold": 0.6274777853725222,
+            "left": {
+              "feature": 2,
+              "threshold": 8.030091702040231,
+              "left": {
+                "class": "SJF"
+              },
+              "right": {
+                "feature": 1,
+                "threshold": 15.527777777777779,
+                "left": {
+                  "class": "RR"
+                },
+                "right": {
+                  "class": "SJF"
+                },
+                "class": "RR"
+              },
+              "class": "RR"
+            },
+            "right": {
+              "class": "SJF"
+            },
+            "class": "SJF"
+          },
+          "right": {
+            "feature": 0,
+            "threshold": 4.0,
+            "left": {
+              "class": "FCFS"
+            },
+            "right": {
+              "feature": 6,
+              "threshold": 2.5,
+              "left": {
+                "class": "RR"
+              },
+              "right": {
+                "feature": 5,
+                "threshold": 2.354166666666667,
+                "left": {
+                  "class": "SJF"
+                },
+                "right": {
+                  "class": "SJF"
+                },
+                "class": "SJF"
+              },
+              "class": "SJF"
+            },
+            "class": "SJF"
+          },
+          "class": "SJF"
+        },
+        "class": "RR"
+      },
+      "class": "RR"
+    },
+    "right": {
+      "feature": 0,
+      "threshold": 3.5,
+      "left": {
+        "feature": 7,
+        "threshold": 0.7596153846153846,
+        "left": {
+          "feature": 6,
+          "threshold": 1.5,
+          "left": {
+            "feature": 5,
+            "threshold": 2.75,
+            "left": {
+              "feature": 2,
+              "threshold": 20.650862842994883,
+              "left": {
+                "class": "RR"
+              },
+              "right": {
+                "class": "SJF"
+              },
+              "class": "RR"
+            },
+            "right": {
+              "class": "FCFS"
+            },
+            "class": "RR"
+          },
+          "right": {
+            "feature": 1,
+            "threshold": 12.666666666666668,
+            "left": {
+              "feature": 4,
+              "threshold": 0.2857142857142857,
+              "left": {
+                "class": "FCFS"
+              },
+              "right": {
+                "feature": 7,
+                "threshold": 0.4392857142857143,
+                "left": {
+                  "class": "RR"
+                },
+                "right": {
+                  "class": "SJF"
+                },
+                "class": "SJF"
+              },
+              "class": "FCFS"
+            },
+            "right": {
+              "feature": 5,
+              "threshold": 1.5833333333333335,
+              "left": {
+                "class": "FCFS"
+              },
+              "right": {
+                "feature": 4,
+                "threshold": 0.1451048951048951,
+                "left": {
+                  "class": "RR"
+                },
+                "right": {
+                  "class": "SJF"
+                },
+                "class": "RR"
+              },
+              "class": "RR"
+            },
+            "class": "FCFS"
+          },
+          "class": "RR"
+        },
+        "right": {
+          "feature": 4,
+          "threshold": 0.1751918158567775,
+          "left": {
+            "feature": 2,
+            "threshold": 13.61227814162579,
+            "left": {
+              "class": "FCFS"
+            },
+            "right": {
+              "class": "FCFS"
+            },
+            "class": "FCFS"
+          },
+          "right": {
+            "feature": 1,
+            "threshold": 10.25,
+            "left": {
+              "feature": 0,
+              "threshold": 2.5,
+              "left": {
+                "feature": 5,
+                "threshold": 4.75,
+                "left": {
+                  "class": "FCFS"
+                },
+                "right": {
+                  "class": "SJF"
+                },
+                "class": "FCFS"
+              },
+              "right": {
+                "feature": 1,
+                "threshold": 2.166666666666667,
+                "left": {
+                  "class": "FCFS"
+                },
+                "right": {
+                  "class": "FCFS"
+                },
+                "class": "FCFS"
+              },
+              "class": "FCFS"
+            },
+            "right": {
+              "class": "SJF"
+            },
+            "class": "FCFS"
+          },
+          "class": "FCFS"
+        },
+        "class": "FCFS"
+      },
+      "right": {
+        "feature": 4,
+        "threshold": 0.29112143196148893,
+        "left": {
+          "feature": 2,
+          "threshold": 1.8482852758687622,
+          "left": {
+            "feature": 1,
+            "threshold": 4.35,
+            "left": {
+              "feature": 7,
+              "threshold": 1.425,
+              "left": {
+                "class": "RR"
+              },
+              "right": {
+                "class": "FCFS"
+              },
+              "class": "FCFS"
+            },
+            "right": {
+              "class": "SJF"
+            },
+            "class": "FCFS"
+          },
+          "right": {
+            "feature": 3,
+            "threshold": 0.9413740177281145,
+            "left": {
+              "feature": 2,
+              "threshold": 3.1361405322191587,
+              "left": {
+                "feature": 4,
+                "threshold": 0.2360884148963619,
+                "left": {
+                  "class": "FCFS"
+                },
+                "right": {
+                  "class": "SJF"
+                },
+                "class": "SJF"
+              },
+              "right": {
+                "feature": 7,
+                "threshold": 1.166761202495746,
+                "left": {
+                  "class": "SJF"
+                },
+                "right": {
+                  "class": "SJF"
+                },
+                "class": "SJF"
+              },
+              "class": "SJF"
+            },
+            "right": {
+              "feature": 7,
+              "threshold": 1.5681352459016393,
+              "left": {
+                "feature": 4,
+                "threshold": 0.2865353037766831,
+                "left": {
+                  "class": "RR"
+                },
+                "right": {
+                  "class": "SJF"
+                },
+                "class": "RR"
+              },
+              "right": {
+                "feature": 3,
+                "threshold": 1.3718631544385165,
+                "left": {
+                  "class": "SJF"
+                },
+                "right": {
+                  "class": "RR"
+                },
+                "class": "SJF"
+              },
+              "class": "SJF"
+            },
+            "class": "SJF"
+          },
+          "class": "SJF"
+        },
+        "right": {
+          "feature": 0,
+          "threshold": 5.5,
+          "left": {
+            "feature": 7,
+            "threshold": 0.603030303030303,
+            "left": {
+              "feature": 4,
+              "threshold": 0.5625,
+              "left": {
+                "class": "RR"
+              },
+              "right": {
+                "class": "SJF"
+              },
+              "class": "RR"
+            },
+            "right": {
+              "feature": 3,
+              "threshold": 0.7179772567501163,
+              "left": {
+                "feature": 5,
+                "threshold": 4.375,
+                "left": {
+                  "class": "SJF"
+                },
+                "right": {
+                  "class": "FCFS"
+                },
+                "class": "SJF"
+              },
+              "right": {
+                "feature": 7,
+                "threshold": 1.7394957983193278,
+                "left": {
+                  "class": "SJF"
+                },
+                "right": {
+                  "class": "SJF"
+                },
+                "class": "SJF"
+              },
+              "class": "SJF"
+            },
+            "class": "SJF"
+          },
+          "right": {
+            "feature": 2,
+            "threshold": 17.52580757977816,
+            "left": {
+              "feature": 1,
+              "threshold": 1.9047619047619047,
+              "left": {
+                "class": "FCFS"
+              },
+              "right": {
+                "feature": 7,
+                "threshold": 0.7897985705003249,
+                "left": {
+                  "class": "SJF"
+                },
+                "right": {
+                  "class": "SJF"
+                },
+                "class": "SJF"
+              },
+              "class": "SJF"
+            },
+            "right": {
+              "class": "RR"
+            },
+            "class": "SJF"
+          },
+          "class": "SJF"
+        },
+        "class": "SJF"
+      },
+      "class": "SJF"
+    },
+    "class": "SJF"
+  },
+  "report": {
+    "seed": 20261023,
+    "samples": 2400,
+    "label_engine": "Python reference fallback (C++ build unavailable)",
+    "features": [
+      "process_count",
+      "burst_mean",
+      "burst_std",
+      "burst_cv",
+      "arrival_density",
+      "priority_mean",
+      "priority_spread",
+      "quantum_burst_ratio"
+    ],
+    "label_objective": "lowest equal-weighted normalized average waiting and response time",
+    "train_size": 1919,
+    "test_size": 481,
+    "accuracy": 0.8108108108108109,
+    "per_class": {
+      "FCFS": {
+        "support": 66,
+        "precision": 0.6805555555555556,
+        "recall": 0.7424242424242424
+      },
+      "SJF": {
+        "support": 281,
+        "precision": 0.852233676975945,
+        "recall": 0.8825622775800712
+      },
+      "RR": {
+        "support": 134,
+        "precision": 0.788135593220339,
+        "recall": 0.6940298507462687
+      },
+      "PRIORITY": {
+        "support": 0,
+        "precision": 0.0,
+        "recall": 0.0
+      }
+    },
+    "confusion_matrix": {
+      "FCFS": {
+        "FCFS": 49,
+        "SJF": 13,
+        "RR": 4,
+        "PRIORITY": 0
+      },
+      "SJF": {
+        "FCFS": 12,
+        "SJF": 248,
+        "RR": 21,
+        "PRIORITY": 0
+      },
+      "RR": {
+        "FCFS": 11,
+        "SJF": 30,
+        "RR": 93,
+        "PRIORITY": 0
+      },
+      "PRIORITY": {
+        "FCFS": 0,
+        "SJF": 0,
+        "RR": 0,
+        "PRIORITY": 0
+      }
+    },
+    "target_accuracy": 0.8,
+    "target_met": true,
+    "class_counts": {
+      "FCFS": 330,
+      "SJF": 1403,
+      "RR": 667
+    }
+  }
+}

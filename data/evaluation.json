@@ -1,0 +1,74 @@
+{
+  "seed": 20261023,
+  "samples": 2400,
+  "label_engine": "Python reference fallback (C++ build unavailable)",
+  "features": [
+    "process_count",
+    "burst_mean",
+    "burst_std",
+    "burst_cv",
+    "arrival_density",
+    "priority_mean",
+    "priority_spread",
+    "quantum_burst_ratio"
+  ],
+  "label_objective": "lowest equal-weighted normalized average waiting and response time",
+  "train_size": 1919,
+  "test_size": 481,
+  "accuracy": 0.8108108108108109,
+  "per_class": {
+    "FCFS": {
+      "support": 66,
+      "precision": 0.6805555555555556,
+      "recall": 0.7424242424242424
+    },
+    "SJF": {
+      "support": 281,
+      "precision": 0.852233676975945,
+      "recall": 0.8825622775800712
+    },
+    "RR": {
+      "support": 134,
+      "precision": 0.788135593220339,
+      "recall": 0.6940298507462687
+    },
+    "PRIORITY": {
+      "support": 0,
+      "precision": 0.0,
+      "recall": 0.0
+    }
+  },
+  "confusion_matrix": {
+    "FCFS": {
+      "FCFS": 49,
+      "SJF": 13,
+      "RR": 4,
+      "PRIORITY": 0
+    },
+    "SJF": {
+      "FCFS": 12,
+      "SJF": 248,
+      "RR": 21,
+      "PRIORITY": 0
+    },
+    "RR": {
+      "FCFS": 11,
+      "SJF": 30,
+      "RR": 93,
+      "PRIORITY": 0
+    },
+    "PRIORITY": {
+      "FCFS": 0,
+      "SJF": 0,
+      "RR": 0,
+      "PRIORITY": 0
+    }
+  },
+  "target_accuracy": 0.8,
+  "target_met": true,
+  "class_counts": {
+    "FCFS": 330,
+    "SJF": 1403,
+    "RR": 667
+  }
+}
