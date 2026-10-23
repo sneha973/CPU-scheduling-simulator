@@ -1,4 +1,6 @@
-# Web-Based CPU Scheduling Simulator
+# CPU Scheduling Simulator
+
+Repository: `CPU-scheduling-simulator`
 
 An educational, local web application that runs one workload through FCFS, non-preemptive SJF, Round Robin, and non-preemptive Priority Scheduling. The C++17 engine returns JSON timelines and scheduling metrics; Django saves runs in SQLite and serves the dashboard and JSON endpoints.
 
