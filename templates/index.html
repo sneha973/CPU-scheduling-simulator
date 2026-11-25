@@ -1,5 +1,285 @@
+{% load static %}
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CPU Scheduling Simulator</title><link rel="stylesheet" href="/static/app.css"></head>
-<body><header><div><span class="eyebrow">OPERATING SYSTEMS LAB</span><h1>CPU Scheduling Simulator</h1><p>Run one workload through four policies. Compare the timelines and trade-offs.</p></div><button id="sample" class="secondary">Load sample</button></header>
-<main><form hidden>{% csrf_token %}</form><section class="panel"><div class="section-title"><div><h2>Workload</h2><p>Lower priority number means higher priority.</p></div><label>RR quantum <input id="quantum" type="number" min="1" value="2"></label></div><div class="table-wrap"><table><thead><tr><th>Process ID</th><th>Arrival</th><th>Burst</th><th>Priority</th><th></th></tr></thead><tbody id="rows"></tbody></table></div><div class="actions"><button id="add" class="secondary">+ Add process</button><button id="run">Run all algorithms</button></div><div id="message" role="status"></div></section>
-<section id="recommendation" class="recommendation hidden"></section><section id="results" class="results"></section><section class="panel"><div class="section-title"><div><h2>Recent runs</h2><p>Saved locally in SQLite on this machine.</p></div><button id="refresh" class="secondary">Refresh</button></div><div id="history"></div></section></main><script src="/static/app.js"></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1e1b4b">
+  <meta name="description" content="Interactive CPU Scheduling Simulator with ML-based algorithm recommendation. Compare FCFS, SJF, Round Robin, and Priority scheduling policies.">
+  <title>SchedLab — CPU Scheduling Simulator & ML Predictor</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="{% static 'app.css' %}">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Navigation Header -->
+    <header class="navbar">
+      <div class="nav-content">
+        <a class="brand" href="/" aria-label="SchedLab Home">
+          <div class="brand-logo">
+            <span class="logo-text">S</span>
+            <span class="logo-dot"></span>
+          </div>
+          <div class="brand-info">
+            <span class="brand-title">Sched<span class="brand-accent">Lab</span></span>
+            <span class="brand-tag">OS SIMULATOR</span>
+          </div>
+        </a>
+
+        <div class="nav-links">
+          <a href="#workload-section" class="nav-link active">Workload Studio</a>
+          <a href="#comparison-section" class="nav-link">Algorithms</a>
+          <a href="#history-section" class="nav-link">History</a>
+        </div>
+
+        <div class="nav-status">
+          <div class="status-badge" id="engine-status" title="Active scheduling engine">
+            <span class="status-pulse"></span>
+            <span class="status-label">C++17 Engine Ready</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-body">
+      <!-- Hero Banner -->
+      <section class="hero-section">
+        <div class="hero-text">
+          <div class="hero-pill">
+            <span class="hero-pill-badge">v1.2</span>
+            <span>Educational Operating Systems Laboratory</span>
+          </div>
+          <h1 class="hero-title">
+            CPU Scheduling <span class="gradient-text">Simulator</span>
+            <br>&amp; ML Predictor
+          </h1>
+          <p class="hero-subtitle">
+            Model CPU workloads, simulate four fundamental scheduling policies (FCFS, SJF, Round Robin, and Priority), inspect interactive Gantt timelines, and receive instant machine-learning algorithm recommendations.
+          </p>
+        </div>
+
+        <div class="hero-visual">
+          <div class="cpu-core-card">
+            <div class="cpu-core-header">
+              <span class="core-chip">CORE 0</span>
+              <span class="core-arch">x86_64 · 1 CPU</span>
+            </div>
+            <div class="core-flow">
+              <div class="flow-pill p-coral">P1</div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-pill p-teal">P2</div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-pill p-indigo">P3</div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-pill p-amber">P4</div>
+            </div>
+            <div class="core-footer">
+              <span>Non-preemptive &amp; Time-sliced</span>
+              <span class="core-ready">READY QUEUE</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 1: Workload Studio -->
+      <section id="workload-section" class="card panel workload-studio">
+        <div class="card-header">
+          <div class="card-header-left">
+            <div class="step-indicator">01</div>
+            <div>
+              <h2 class="card-title">Workload Studio</h2>
+              <p class="card-desc">Configure processes, burst times, arrival sequence, and priorities.</p>
+            </div>
+          </div>
+          <div class="card-header-actions">
+            <div class="dropdown-presets">
+              <button type="button" id="btn-preset-default" class="btn btn-ghost" title="Load balanced 4-process example">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                Load Example
+              </button>
+              <button type="button" id="btn-preset-variance" class="btn btn-ghost" title="Load workload with large burst variation">
+                High Variance
+              </button>
+              <button type="button" id="btn-preset-staggered" class="btn btn-ghost" title="Load workload with staggered arrivals">
+                Staggered
+              </button>
+              <button type="button" id="btn-clear-workload" class="btn btn-ghost text-muted" title="Clear all rows">
+                Clear
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="workload-controls-bar">
+          <div class="process-counter">
+            <span class="counter-label">Configured Processes:</span>
+            <span id="process-count" class="counter-badge">0</span>
+            <span class="color-consistency-hint">• Each process receives a unique consistent color across the simulator</span>
+          </div>
+
+          <div class="quantum-wrapper">
+            <label for="quantum" class="quantum-label">
+              <span>ROUND ROBIN QUANTUM:</span>
+              <span class="quantum-hint" title="Time slice allocated per process in Round Robin">(time units)</span>
+            </label>
+            <div class="quantum-input-group">
+              <input id="quantum" type="number" min="1" max="1000000" value="2" class="input-field quantum-field" aria-label="Round Robin Quantum">
+              <div class="quick-quantum-chips">
+                <button type="button" class="btn-chip" data-q="2">q=2</button>
+                <button type="button" class="btn-chip" data-q="4">q=4</button>
+                <button type="button" class="btn-chip" data-q="6">q=6</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Workload Table -->
+        <div class="table-container">
+          <table class="workload-table">
+            <thead>
+              <tr>
+                <th style="width: 25%;">PROCESS ID</th>
+                <th style="width: 22%;">ARRIVAL TIME</th>
+                <th style="width: 22%;">BURST TIME</th>
+                <th style="width: 22%;">
+                  PRIORITY
+                  <span class="info-tooltip" title="Lower integer = Higher priority (0 is highest)">ⓘ</span>
+                </th>
+                <th style="width: 9%; text-align: center;">ACTION</th>
+              </tr>
+            </thead>
+            <tbody id="rows">
+              <!-- Dynamically populated via app.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Workload Footer Actions -->
+        <div class="workload-footer">
+          <div class="footer-left">
+            <button id="add" type="button" class="btn btn-secondary">
+              <span class="btn-icon">＋</span> Add Process
+            </button>
+            <div class="priority-guide">
+              <span class="badge-subtle">Note</span> Lower priority number = higher execution priority
+            </div>
+          </div>
+
+          <div class="footer-right">
+            <button id="run" type="button" class="btn btn-primary btn-run">
+              <span class="run-icon">▶</span>
+              <span>Run All Algorithms</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Status & Error Alert -->
+        <div id="message" class="alert-banner" role="status" aria-live="polite"></div>
+      </section>
+
+      <!-- Section 2: ML-Powered Recommendation Card -->
+      <section id="recommendation" class="card recommendation-card hidden" aria-live="polite">
+        <!-- Injected via JavaScript -->
+      </section>
+
+      <!-- Section 3: Aggregate Comparison Matrix -->
+      <section id="comparison-section" class="card panel comparison-card hidden">
+        <div class="card-header">
+          <div class="card-header-left">
+            <div class="step-indicator step-teal">02</div>
+            <div>
+              <h2 class="card-title">Algorithm Performance Comparison</h2>
+              <p class="card-desc">Direct head-to-head evaluation across all 4 scheduling policies.</p>
+            </div>
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="comparison-table" id="comparison-table">
+            <thead>
+              <tr>
+                <th>ALGORITHM</th>
+                <th>AVG WAITING TIME</th>
+                <th>AVG TURNAROUND</th>
+                <th>AVG RESPONSE</th>
+                <th>THROUGHPUT</th>
+                <th>CONTEXT SWITCHES</th>
+                <th>CPU UTILIZATION</th>
+              </tr>
+            </thead>
+            <tbody id="comparison-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 4: Algorithm Timelines & Process Metrics -->
+      <section class="results-container">
+        <div class="results-header">
+          <div>
+            <span class="eyebrow-tag">EXECUTION PROFILES</span>
+            <h2 class="section-heading">Detailed Timelines &amp; Metrics</h2>
+          </div>
+          <span id="results-count-hint" class="results-badge">Awaiting Simulation</span>
+        </div>
+
+        <div id="results" class="results-grid">
+          <!-- Empty State -->
+          <div class="empty-state-box">
+            <div class="empty-icon-wrap">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="13" y2="12"/><line x1="7" y1="16" x2="11" y2="16"/></svg>
+            </div>
+            <h3>No simulation run yet</h3>
+            <p>Customize your workload above and click <strong>Run All Algorithms</strong> to generate colored Gantt timelines and per-process execution statistics.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Run History -->
+      <section id="history-section" class="card panel history-card">
+        <div class="card-header">
+          <div class="card-header-left">
+            <div class="step-indicator step-muted">03</div>
+            <div>
+              <h2 class="card-title">Recent Run History</h2>
+              <p class="card-desc">Simulations stored persistently in PostgreSQL (or local SQLite).</p>
+            </div>
+          </div>
+          <button id="refresh" type="button" class="btn btn-ghost" title="Refresh run history">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            Refresh
+          </button>
+        </div>
+
+        <div id="history" class="history-content">
+          <div class="history-empty">Loading history...</div>
+        </div>
+      </section>
+    </main>
+
+    <!-- App Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <div class="footer-left-info">
+          <strong>SchedLab</strong> — CPU Scheduling Simulator with ML Predictor
+          <span class="footer-sub">Operating Systems Core Project · Developed by Sneha</span>
+        </div>
+        <div class="footer-right-tags">
+          <span class="tag">C++17 Engine</span>
+          <span class="tag">Django 5.2</span>
+          <span class="tag">Render + Neon PostgreSQL</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <form hidden>{% csrf_token %}</form>
+  <script src="{% static 'app.js' %}" defer></script>
+</body>
+</html>

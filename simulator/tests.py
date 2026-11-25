@@ -31,15 +31,24 @@ class SchedulerWorkflowTests(TestCase):
                 response=self.client.post('/api/simulate/',data=json.dumps(body),content_type='application/json')
                 self.assertEqual(response.status_code,400)
     def test_idle_gap_and_round_robin_boundary(self):
-        body={'quantum':1,'processes':[{'id':'late','arrival':5,'burst':1,'priority':0}]}
-        response=self.client.post('/api/simulate/',data=json.dumps(body),content_type='application/json')
-        self.assertEqual(response.status_code,200)
-        result=response.json()['results']['FCFS'];self.assertEqual(result['timeline'][0],{'process_id':'IDLE','start':0,'end':5})
-        self.assertEqual(result['aggregate']['cpu_utilization'],100/6)
+        body = {'quantum': 1, 'processes': [{'id': 'late', 'arrival': 5, 'burst': 1, 'priority': 0}]}
+        response = self.client.post('/api/simulate/', data=json.dumps(body), content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        result = response.json()['results']['FCFS']
+        self.assertEqual(result['timeline'][0], {'process_id': 'IDLE', 'start': 0, 'end': 5})
+        self.assertAlmostEqual(result['aggregate']['cpu_utilization'], 100 / 6, places=2)
+
+    def test_health_check(self):
+        response = self.client.get('/health/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'status': 'ok'})
+
     def test_history_is_persisted(self):
-        self.client.post('/api/simulate/',data=json.dumps(self.payload()),content_type='application/json')
-        self.assertEqual(SimulationRun.objects.count(),1)
-        response=self.client.get('/api/history/');self.assertEqual(response.status_code,200);self.assertEqual(response.json()['runs'][0]['process_count'],2)
+        self.client.post('/api/simulate/', data=json.dumps(self.payload()), content_type='application/json')
+        self.assertEqual(SimulationRun.objects.count(), 1)
+        response = self.client.get('/api/history/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['runs'][0]['process_count'], 2)
     def test_browser_page_provides_csrf_token_for_json_post(self):
         from django.test import Client
         browser=Client(enforce_csrf_checks=True)
