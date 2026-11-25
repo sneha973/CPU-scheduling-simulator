@@ -1,5 +1,7 @@
 Django>=5.2,<7.0
 djangorestframework>=3.16,<4.0
-numpy>=2.0
-pandas>=2.2
-scikit-learn>=1.6
+# numpy>=2.0
+# pandas>=2.2
+# scikit-learn>=1.6
+gunicorn>=22.0
+whitenoise>=6.6
