@@ -599,3 +599,8 @@ window.restoreRunWorkload = function(jsonStr, quantum) {
 // Initialize with default balanced sample and load initial history
 loadPreset(PRESETS.default, 2);
 loadHistory();
+
+// Auto-run simulation if URL query parameter autorun=1 is passed
+if (new URLSearchParams(window.location.search).get('autorun') === '1') {
+  setTimeout(() => document.querySelector('#run').click(), 250);
+}
